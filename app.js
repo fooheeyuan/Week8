@@ -65,3 +65,10 @@ db.collection("cafes")
       }
     });
   });
+
+//update data
+db.collection("cafes")
+  .doc("0IRXdTwXQDH4eesO7Fb6")
+  .update({
+    name: "Cafe B test"
+  });
