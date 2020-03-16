@@ -29,14 +29,14 @@ function renderCafe(doc) {
   });
 }
 
-// getting data
-db.collection("cafes")
-  .get()
-  .then(snapshot => {
-    snapshot.docs.forEach(doc => {
-      renderCafe(doc);
-    });
-  });
+// // getting data
+// db.collection("cafes")
+//   .get()
+//   .then(snapshot => {
+//     snapshot.docs.forEach(doc => {
+//       renderCafe(doc);
+//     });
+//   });
 
 // saving data
 form.addEventListener("submit", e => {
@@ -50,15 +50,18 @@ form.addEventListener("submit", e => {
 });
 
 // real-time listener
-db.collection("cafes").onSnapshot(snapshot => {
-  let changes = snapshot.docChanges();
-  changes.forEach(change => {
-    console.log(change.doc.data());
-    if (change.type == "added") {
-      renderCafe(change.doc);
-    } else if (change.type == "removed") {
-      let li = cafeList.querySelector("[data-id=" + change.doc.id + "]");
-      cafeList.removeChild(li);
-    }
+db.collection("cafes")
+  .where("city", "==", "Singapore")
+  .orderBy("name")
+  .onSnapshot(snapshot => {
+    let changes = snapshot.docChanges();
+    changes.forEach(change => {
+      console.log(change.doc.data());
+      if (change.type == "added") {
+        renderCafe(change.doc);
+      } else if (change.type == "removed") {
+        let li = cafeList.querySelector("[data-id=" + change.doc.id + "]");
+        cafeList.removeChild(li);
+      }
+    });
   });
-});
